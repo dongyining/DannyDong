@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			function fatherclass(id){
+				this.books=['Javascript','html','css'];//引用类公用属性
+				this.id=id;//值类型共有属性
+			};//父
+			fatherclass.prototype.showBooks=function(){
+				console.log(this.books);
+			};//父类声明原型方法
+			function sonclass(id){
+				fatherclass.call(this,id);//继承父类
+			};//子
+			var instance1=new sonclass(10);
+			var instance2=new sonclass(11);
+			instance1.books.push("设计模式");
+			console.log(instance1);//['Javascript','html','css','设计模式']
+			console.log(instance1.id);//10
+			console.log(instance2.books);//['Javascript','html','css']
+			console.log(instance2.id);//11
+			instance1.showBooks();//TypeError
+		</script>
+	</body>
+</html>

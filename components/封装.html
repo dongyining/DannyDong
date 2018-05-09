@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			//1.创建类Book(习惯首字母大写)(JS中函数也是对象)
+			//2A. this(函数自带变量,指向当前对象),作用添加属性或方法
+			
+			var Book=function(id,bookname,price){
+				this.id=id;
+				this.bookname=bookname;
+				this.price=price;
+			}
+			//this和prototype区别:
+			//通过this添加属性和方法是在当前对象上添加,该对象自身拥有的;
+			//所以每次通过类创建一个对象时,this指向的方法或属性都会相应的创建;
+			
+			//每个创建对象都有prototype,用于指向其继承的属性或方法.
+			//这样通过prototype集成的方法并不是对象自身,所以使用时通过prototype逐级访问到的;
+			//所以每次类创建一个新对象时,这些方法或属性不会再次创建
+			
+			//2B.也可通过    类原型(类也是个对象 所以有prototype),作用添加属性或方法
+			//(1)原型对象的属性赋值
+//			var Book=function(){}
+//			Book.prototype.dispaly=funtion(){
+//				//展示这本书
+//			}//constructor指向Book
+			//(2)将对象赋值给类的原型对象
+			Book.prototype={
+				display:function(){},//加,
+				display1:function(){}
+			}//constructor指向Book
+			//constructor(属性)指向拥有这个原型的函数或对象(类似于this)
+			//3B.用new关键字实例化属性或方法
+			var book =new Book('10','Javascript',50)
+			console.log(book)
+			console.log(Book)
+			console.log(book instanceof Book)
+			console.log("book.bookname "+book.bookname);//Javascript
+		</script>
+	</body>
+</html>

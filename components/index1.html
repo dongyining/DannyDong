@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .mask {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            top: 0;
+            z-index: 10000;
+            background-color: rgba(0, 0, 0, 0.8);
+            /* display: none; */
+        }
+
+        .mask_dialog {
+            width: 600px;
+            height: 400px;
+            background: #fff;
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            z-index: 10001;
+        }
+
+        html,
+        body {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background: blueviolet;
+        }
+
+        .content {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            /* background: green; */
+            z-index: 10001;
+        }
+    </style>
+</head>
+
+<body>
+    zhaoqiansunlizhouwuzhengwang
+    <div class="mask"></div>
+    <div class="content">
+        <div class="mask_dialog"></div>
+    </div>
+    <script src="jquery-2.1.1.min.js"></script>
+    <script>
+        ;
+        !(function ($) {
+            $(".mask_dialog").mousedown(function (event) {
+                $(".mask_dialog").css("cursor", "move");
+                $(".mask_dialog").attr({
+                    'ondragstart': 'return false',
+                    'ondrag': 'return false',
+                    'onselectstart': 'return false'
+                })
+                var xo = event.offsetX || event.originalEvent.layerX;
+                var yo = event.offsetY || event.originalEvent.layerY;
+                console.log(xo + ":" + yo)
+                var x = event.clientX || event.originalEvent.layerX;
+                var y = event.clientY || event.originalEvent.layerY;
+                $(".content").mousemove(function (event) {
+                    var event = event || window.event;
+                    var x = event.clientX || event.originalEvent.layerX;
+                    var y = event.clientY || event.originalEvent.layerY;
+                    console.log($(".content").width(), $(".mask_dialog").width())
+                    var wx = $(".content").width() - $(".mask_dialog").width();
+                    var wy = $(".content").height() - $(".mask_dialog").height();
+                    var mdx = $(".mask_dialog").offset().left;
+                    var mdy = $(".mask_dialog").offset().top;
+                    console.log("移动" + mdy, wy);
+                    console.log(wy, $(".content").height())
+
+                    if (mdy - 41 > wy) {
+                        $(".mask_dialog").css("top", wy + "px");
+                        // $(".content").unbind("mousemove");
+
+                    } else {
+                        if (y - yo < 0) {
+                            $(".mask_dialog").css("top", 0 + "px");
+                            // $(".content").unbind("mousemove");
+                        } else {
+                            $(".mask_dialog").css("top", y - yo + "px");
+                        }
+
+                    };
+
+                    if (mdx > wx) {
+                        $(".mask_dialog").css("left", wx + "px");
+                        // $(".content").unbind("mousemove");
+
+                    } else {
+                        if (x - xo < 0) {
+                            $(".mask_dialog").css("left", 0 + "px");
+                            // $(".content").unbind("mousemove");
+                        } else {
+                            $(".mask_dialog").css("left", x - xo + "px");
+                        }
+
+                    }
+
+                })
+
+            })
+
+            $(window).mouseup(function () {
+                console.log("结束");
+                $(".content").unbind("mousemove");
+                $(".mask_dialog").css("cursor", "auto");
+
+            })
+
+            $("body").mouseup(function () {
+                console.log("结束");
+                $(".content").unbind("mousemove");
+                $(".mask_dialog").css("cursor", "auto");
+
+            })
+            $(".mask_dialog").mouseup(function () {
+                console.log("结束");
+                $(".mask_dialog").css("cursor", "auto");
+                $(".content").unbind("mousemove");
+            })
+        })(window.jQuery);
+    </script>
+</body>
+
+</html>

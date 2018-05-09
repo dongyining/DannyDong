@@ -1,0 +1,202 @@
+    <html>  
+      
+    <head>  
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">  
+        <title>JS 组件</title>  
+        <style>  
+            .TabControl{  
+                position:absolute;  
+            
+            }  
+            
+            .TabControl .tab-head{  
+                height:22px;width:100%;  
+            /*  border-left: solid 0px #e0e0e0;border-right: solid 0px #e0e0e0;border-top: solid 0px #e0e0e0;border-bottom: solid 1px #e0e0e0; */  
+                position:absolute;  
+                z-index:9;  
+            }  
+            
+            .TabControl ul{  
+                position:absolute;  
+                top:2px;  
+                padding:0px;  
+                margin:0px;  
+                z-index:10;  
+            }  
+            
+            .TabControl li{  
+                list-style:none; /* 将默认的列表符号去掉 */  
+                padding-left:10px;  padding-right:10px;  
+                margin:0;   
+                float:left;  
+                border: solid 1px #e0e0e0;  
+                background-color:#ffffff;     
+                height:20px;  
+                cursor:default;  
+            }  
+            
+            .TabControl  li.selected{  
+                border-bottom: solid 1px #ffffff;border-top: solid 1px #ff0000;  
+                z-index:10;   
+            }  
+            
+            .TabControl li.unselected{  
+                border-bottom: solid 1px #e0e0e0;border-top: solid 1px #e0e0e0;  
+                z-index:10;   
+            }  
+            
+            
+            .TabControl  .pageSelected{  
+                position:absolute;  
+                display:block;  
+                border: solid 1px #e0e0e0;   
+                width:100%;height:100%;  
+                z-index:1;  
+                top:23px;  
+            }  
+            
+            .TabControl .pageUnSelected{  
+                display:none;  
+                border: solid 1px #e0e0e0;   
+                width:100%;height:100%;  
+                z-index:1;  
+                top:23px;     
+            }  
+        </style>  
+    </head>  
+      
+    <body>  
+    <script lang="javascript">  
+        var TabControl = function(width, height){  
+            var me = this;  
+              
+            //TAB控件容器，头，列表  
+            var cbody,tabHead, ul;    
+              
+            //最后选中的TAB页  
+            var lastSelectedPage = 0;  
+              
+            //TAB页管理容器  
+            var pages = [];       
+              
+      
+//          /**  
+//           * 初始化函数  
+//           * param{tabCount}, 创建tab页的个数  
+//           */  
+            me.init = function(tabCount){  
+                //创建TAB容器  
+                cbody = document.createElement("DIV");  
+                cbody.className = "TabControl";  
+                cbody.style.width = width || "400px";  
+                cbody.style.height = height || "300px";  
+      
+                //创建TAB控件头  
+                tabHead= document.createElement("DIV");  
+                tabHead.className = "tab-head";  
+                cbody.appendChild(tabHead);  
+                  
+                //创建TAB头  
+                ul = document.createElement("UL");  
+                tabHead.appendChild(ul);  
+              
+                //根据参数初始化TAB页，缺省创建2个TAB页  
+                var tc = tabCount ||  2;  
+                  
+                for(var i=0;i<tc;i++){  
+                    me.insertPage(i,"tabPage" + i)   
+                }  
+                  
+                //缺省选中第一页  
+                me.selectPage(0);   
+            }  
+              
+            /**  
+             * 插入TAB页  
+             * param{idx},插入位置  
+             * param{title},TAB页标题  
+             *  
+             */  
+            me.insertPage = function(idx,title){  
+                if(parseInt(idx)>=0){  
+                    var li = document.createElement("LI");  
+                    li.className = "unselected";  
+                    li.innerText = title;  
+                    var chd = ul.childNodes[idx];
+//                  ul.insertBefore(li); 出错 
+                    ul.insertBefore(li,null);  
+                    li.onclick = function(){  
+                        me.selectPage(getSelectedIndex(li));  
+                    }  
+                      
+                      
+                    //创建page  
+                    var page = document.createElement("DIV");  
+                    page.className = "pageUnSelected";  
+                    pages.push(page);  
+                    cbody.appendChild(page);  
+                 }            
+            }  
+               
+            /*  
+             * 内部函数  
+             * 根据选中的对象，获取对应的TAB页索引  
+             */  
+            function getSelectedIndex(li){  
+                var chd = ul.childNodes;  
+                for(var i=0;i<chd.length;i++){  
+                    if(chd[i] == li){  
+                        return i;  
+                    }  
+                }  
+            }  
+              
+              
+            /**  
+             * 选中某页  
+             * param{idx},选中页的索引  
+             */  
+            me.selectPage  = function(idx){  
+                if(parseInt(idx)>=0){                  
+                    var lis = ul.childNodes;  
+      
+                    alert(lastSelectedPage + ',' + idx);  
+                    lis[lastSelectedPage].className = "unselected";   
+                    lis[idx].className  = "selected";  
+      
+    /*  
+                      
+                    for(var i=0;i<lis.length;i++){  
+                        if( i== idx){  
+                            lis[i].className  = "selected";  
+                        } else{  
+                            alert('B:'+ i + ','  + lis[idx].innerText);  
+                            lis[i].className  = "unselected";  
+                        }  
+      
+                    }  
+    */                        
+                      
+                    //隐藏无需显示的TAB页，显示选中的TAB页  
+                    pages[lastSelectedPage].className = "pageUnSelected";     
+                    pages[idx].className = "pageSelected";    
+          
+                    lastSelectedPage = idx;  
+                }  
+      
+            }  
+              
+            //在函数尾部调用初始化函数执行初始化  
+            me.init();  
+          
+            //最后返回DOM对象  
+            return  cbody;  
+        }  
+      
+      
+        var tabControl = new TabControl();  
+        document.body.appendChild(tabControl);    
+    </script>  
+    </body>  
+      
+    </html>  

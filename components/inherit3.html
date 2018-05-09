@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+			function fatherclass(name){
+				this.name=name;//值类型共有属性
+				this.books=["html","css","Javascript"];	//引用类型共有属性			
+			}//父
+			fatherclass.prototype.getName=function(){
+				console.log(this.name);
+			}//父原型公有方法
+			function sonclass(name,time){
+				fatherclass.call(this,name);//构造函数式继承父类属性
+				this.time=time;//子类中新增共有属性
+			}
+			sonclass.prototype=new fatherclass();//类式继承 子类原型继承父类
+			sonclass.prototype.getTime=function(){
+				console.log(this.time);
+			}
+			
+			
+			var instance1=new sonclass("js","book","2014");
+			instance1.books.push("设计模式");
+			console.log(instance1.books);//["html","css","Javascript","设计模式"]
+			instance1.getName();//js book
+			instance1.getTime();//2014
+			var instance2=new sonclass("css book",2013);
+			console.log(instance2.books);//["html","css","Javascript"]
+			instance2.getName();//css book
+			instance2.getTime();//2013
+		</script>
+	</body>
+</html>

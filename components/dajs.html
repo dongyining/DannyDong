@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<script src="jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			/**
+			 * Created by LANRONGDA on 2017/7/5.
+			 * CAROUSEL.JS
+			 */
+			;
+			(function($) {
+				$.fn.extend({
+					carousel: function(option, even) {
+						var defaults = {
+							style: 'default',
+							width: '100%',
+							height: '350px',
+							autoplay: true,
+							speed: 500,
+							waitingTime: 3000,
+							hold: 200,
+							JSON: []
+						};
+						var opt = $.extend(defaults, option);
+						console.log(opt)
+						var $this = this;
+						var $cont = this.children('.carousel_cont');
+						var $img = $cont.children('img');
+						var $winW = window.innerWidth;
+
+						var initCarousel = function() {
+							var cont = $cont;
+							$.each(opt.JSON, function(ind, v) {
+								var Img = $('<img />').attr({
+									'src': v.url,
+									'href': v.href
+								});
+								cont.append(Img);
+							});
+							var w = opt.width,
+								h = opt.height,
+								autoplay = opt.autoplay,
+								speed = opt.speed,
+								waitionTiem = opt.waitingTime;
+							var len = cont.children('img').length;
+							var winW = $winW;
+							$($this).attr({
+								'ondragstart': 'return false',
+								'ondrag': 'return false',
+								'onselectstart': 'return false'
+							});
+							cont.children('img').css('width', winW + 'px');
+							cont.width(winW * len);
+							$($this).height(opt.height);
+
+							this.hasTouch = function() { //判断浏览器支持的交互事件 touch & click
+								var touchObj = {};
+								touchObj.isSupportTouch = "ontouchend" in document ? true : false;
+								touchObj.isEvent = touchObj.isSupportTouch ? 'touch' : 'click';
+								return touchObj.isEvent;
+							};
+						};
+						var overLoad = function() {
+							$('.carousel_loading').fadeOut(1000, function() {
+								$cont.css('display', 'block');
+							});
+						};
+						initCarousel();
+						// 默认 style='' || default
+						var defaultEventCarousel = function() {
+							var down = false,
+								initX = 0,
+								initY = 0,
+								offsetY = 0,
+								oldX = 0,
+								offsetX = 0,
+								cont = $cont,
+								winW = $winW,
+								contW = cont.width() - winW;
+							$($this)
+								.on('mousedown', function(e) {
+									down = true;
+									initX = e.pageX;
+									cont.css('transform', 'translateX(' + oldX + 'px)');
+								})
+								.on('mouseup', function() {
+									down = false;
+									var contOffsetX = cont.css('transform').substring(7).split(',')[4];
+									if(contOffsetX > 0) {
+										cont.css({
+											'transition': 'all .3s ease',
+											'transform': 'translateX(0px)'
+										});
+										oldX = 0;
+									} else if(contOffsetX < (-contW)) {
+										cont.css({
+											'transition': 'all .3s ease',
+											'transform': 'translateX(' + (-contW) + 'px)'
+										});
+										oldX = (-contW);
+									} else {
+										oldX = oldX + (offsetX - initX);
+									}
+								})
+								.on('mousemove', function(e) {
+									if(1 == e.which && down == true) {
+										offsetX = e.pageX;
+										y = e.pageY;
+										cont.css({
+											'transition': 'none',
+											'transform': 'translateX(' + (oldX + (offsetX - initX)) + 'px)'
+										});
+									}
+								})
+						}; // 默认 style='' || default   OVER;;;
+
+						//滑动 style = slide
+						var slideEventCarousel = function() {
+							var initX = 0,
+								offsetX = 0,
+								index = 1,
+								down = false,
+								winW = $winW,
+								hold = opt.hold,
+								cont = $cont,
+								img = cont.children('img');
+							var lastImg = $('<img />').attr('src', img.first().attr('src')).css('width', winW + 'px'),
+								firstImg = $('<img />').attr('src', img.last().attr('src')).css('width', winW + 'px');
+							cont.prepend(firstImg).append(lastImg);
+							var len = img.length;
+							cont.width(winW * (len + 2));
+							cont.css({
+								'transform': 'translateX(' + -index * winW + 'px)'
+							});
+							var point = '';
+							for(var i = 0; i < len; i++) {
+								point += '<div class="carousel_panel_point"></div>';
+							}
+							$('.carousel_panel').width(16 * len).css('margin-left', '-' + (8 * len) + 'px').append(point);
+							$('.carousel_panel_point').eq(0).addClass('active').siblings().removeClass('active');
+							var aftermove = function(ind) {
+								$('.carousel_panel_point').eq(ind - 1).addClass('active').siblings().removeClass('active');
+								cont.stop(false, true).css({
+									'transition': 'all .3s ease',
+									'transform': 'translateX(' + -ind * winW + 'px)'
+								});
+							};
+							var moveing = function(ind, offX, iX) {
+								$('.carousel_panel_point').eq(ind - 1).addClass('active').siblings().removeClass('active');
+								cont.stop(false, true).css({
+									'transition': 'none',
+									'transform': 'translateX(' + (-ind * winW + offX - iX) + 'px)'
+								});
+							};
+							var autoplayTimer;
+							var autoplayEvent = function() {
+								if(opt.autoplay) {
+									autoplayTimer = setInterval(function() {
+										var winW = $winW;
+										if(index < len) {
+											index++;
+											aftermove(index);
+										} else {
+											index++;
+											cont.stop(false, true)
+												.animate({
+													'transition': 'all .3s ease',
+													'transform': 'translateX(' + -index * winW + 'px)'
+												}, function() {
+													index = 0;
+													$(this).css({
+														'transition': 'none',
+														'transform': 'translateX(' + -index * winW + 'px)'
+													});
+												});
+										}
+									}, opt.waitingTime);
+								};
+							};
+							if(this.hasTouch() && this.hasTouch() == 'touch') {
+								//触摸事件 touch 绑定
+								$($this)
+									.on('touchstart', function(event) {
+										event.preventDefault();
+										initX = event.originalEvent.targetTouches[0].pageX;
+										initY = event.originalEvent.targetTouches[0].pageY;
+										offsetX = initX;
+										offsetY = initY;
+									})
+									.on('touchmove', function(event) {
+										clearInterval(autoplayTimer);
+										event.preventDefault();
+										offsetX = event.originalEvent.targetTouches[0].pageX;
+										offsetY = event.originalEvent.targetTouches[0].pageY;
+										moveing(index, offsetX, initX);
+									})
+									.on('touchend', function() {
+										if(initX == offsetX) {
+											window.location.href = $(this).attr('href');
+										}
+										clearInterval(autoplayTimer);
+										autoplayEvent();
+										if((offsetX - initX) > hold) {
+											index--;
+											aftermove(index);
+										}
+										if((offsetX - initX) < -hold) {
+											index++;
+											aftermove(index);
+										} else {
+											aftermove(index);
+										}
+										if(index < 1) {
+											cont.stop(false, true)
+												.animate({
+													'transition': 'none',
+													'transform': 'translateX(' + -index * winW + 'px)'
+												}, function() {
+													index = len;
+													$(this).css({
+														'transition': 'none',
+														'transform': 'translateX(' + -index * winW + 'px)'
+													});
+												});
+										} else if(index > len) {
+											cont.stop(false, true)
+												.animate({
+													'transition': 'none',
+													'transform': 'translateX(' + -index * winW + 'px)'
+												}, function() {
+													index = 1;
+													$('.carousel_panel_point').eq(index - 1).addClass('active').siblings().removeClass('active');
+													$(this).css({
+														'transition': 'none',
+														'transform': 'translateX(' + -index * winW + 'px)'
+													});
+												});
+										}
+									});
+							} else {
+								//鼠标滑动事件
+								$($this)
+									.on('mousedown', function(e) {
+										e.preventDefault();
+										down = true;
+										initX = e.pageX;
+									})
+									.on('mousemove', function(e) {
+										e.preventDefault();
+										if(1 == e.which && down == true) {
+											clearInterval(autoplayTimer);
+											offsetX = e.pageX;
+											moveing(index, offsetX, initX);
+										}
+									})
+									.on('mouseup', function(e) {
+										e.preventDefault();
+										clearInterval(autoplayTimer);
+										autoplayEvent();
+										offsetX = e.pageX;
+										if(initX == offsetX) {
+											window.location.href = $(this).attr('href');
+										}
+										down = false;
+										if((offsetX - initX) > hold) {
+											index--;
+											aftermove(index);
+										}
+										if((offsetX - initX) < -hold) {
+											index++;
+											aftermove(index);
+										} else {
+											aftermove(index);
+										}
+										if(index < 1) {
+											cont.stop(false, true)
+												.animate({
+													'transition': 'none',
+													'transform': 'translateX(' + -index * winW + 'px)'
+												}, function() {
+													index = len;
+													$(this).css({
+														'transition': 'none',
+														'transform': 'translateX(' + -index * winW + 'px)'
+													});
+												});
+										} else if(index > len) {
+											cont.stop(false, true)
+												.animate({
+													'transition': 'none',
+													'transform': 'translateX(' + -index * winW + 'px)'
+												}, function() {
+													index = 1;
+													$('.carousel_panel_point').eq(index - 1).addClass('active').siblings().removeClass('active');
+													$(this).css({
+														'transition': 'none',
+														'transform': 'translateX(' + -index * winW + 'px)'
+													});
+												});
+										}
+									});
+							}
+							autoplayEvent();
+						}; //滑动 style = slide   OVER;;;
+
+						switch(opt.style) { //style option
+							case 'default':
+								defaultEventCarousel();
+								break;
+							case 'slide':
+								slideEventCarousel();
+								break;
+						}
+						overLoad();
+					}
+				});
+			})(jQuery);
+			// $('.classs').carousel({speed:'600'})
+			// carousel module
+			//         <div class="carousel_main" id="carousel_1">
+			//             <div class="carousel_loading"></div>
+			//             <div class="carousel_cont"></div>
+			//             <div class="carousel_panel"></div>
+			//         </div>
+			/**
+			 * Created by lanrongda on 2017/8/21.
+			 */
+			// var ImgJSON = [
+			//     {
+			//         'url':'img/banner.jpg',
+			//         'href':'www.baidu.com'
+			//     },{
+			//         'url':'img/height.jpg',
+			//         'href':'www.baidu.com'
+			//     },{
+			//         'url':'img/height-2.jpg',
+			//         'href':'www.baidu.com'
+			//     },{
+			//         'url':'img/loading.gif',
+			//         'href':'www.baidu.com'
+			//     },{
+			//         'url':'img/wallhaven-536983.jpg',
+			//         'href':'www.baidu.com'
+			//     },{
+			//         'url':'img/width.jpg',
+			//         'href':'www.baidu.com'
+			//     }
+			// ];
+			// $('#carousel_1').carousel({
+			//     style:'slide',
+			//     width:'100%',
+			//     height:'10rem',
+			//     autoplay:true,
+			//     speed:500,
+			//     waitingTime:3000,
+			//     hold:50,
+			//     JSON:ImgJSON
+			// });
+		</script>
+	</body>
+
+</html>

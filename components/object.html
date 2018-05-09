@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script type="text/javascript">
+//			var checkobject={			
+//				checkName:function(){
+//					return this;
+//				},
+//				checkEmail:function(){
+//					return this;
+//				}
+//			};
+//			checkobject.checkName().checkEmail();
+//			console.log(checkobject)
+//          下面是类的原型对象写法
+			var checkobject=function(){}
+				checkobject.prototype={
+					checkName:function(){
+						console.log("1")
+						return this
+					},
+					checkEmail:function(){
+						return this;
+					}
+				}	
+				var a=new checkobject();
+//				a.checkName().checkEmail();
+				console.log(a.checkName())
+		</script>
+	</body>
+</html>

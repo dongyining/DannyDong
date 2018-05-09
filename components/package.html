@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<a onclick="book1.display()">aaa</a>
+		<a onclick="book1.display1()">bbb</a>
+		
+		<script type="text/javascript">
+			var Book = function(title, time, type) {
+				console.log(this)
+				var num=1;//私有属性
+//				if(this instanceof Book) {
+					this.title = title;
+					this.time = time;//对象公有属性
+					this.type = type;
+//				} else {
+//					return new Book(title, time, type);//防止忘了new
+//				}
+				this.copy=function(){}//对象共有方法
+				(function checkId(){
+					console.log("copy私有方法")
+				}());//私有方法
+				this.getTime=function(){
+					console.log("特权方法getTime")
+				};
+				this.setTime=function(time){
+//					this.time=time
+					console.log("特权方法setTime..."+time)
+					
+				};//特权方法
+				//构造器调取
+				this.getTime();
+			}
+//			Book.prototype.display=function(){
+//				
+//			}
+//			Book.prototype.display1=function(){
+//				
+//			}
+//			Book.prototype.display.hello=function(){
+//				console.log("Book.prototype.hello")
+//			}
+			Book.isChinese=true;
+			Book.resetTime=function(){
+				console.log("new Tiem")
+			};
+			Book.prototype={
+				isJsBook:false,
+				display:function(){
+					this.hello=function(){
+					console.log("Book.prototype.hello")
+				}
+					console.log("Book.prototype.display");
+					window.location.href="fun_Callback.html"
+				},//私有函数可被访问看不到原型加在函数上取从new object 取
+				display1:function(){
+					console.log("Book.prototype.display");
+					window.location.href="components_jsex.html"
+				}//私有函数可被访问看不到原型加在函数上取从new object 取
+			}
+			var book1 = new Book('Javascript', '2017', 'js');
+			console.log(Book)//type--function
+			console.log(book1);//type--new之后变成了object
+			console.log("book1.setTime('time')"+book1.setTime('time'))
+			console.log("book1.num私有属性访问不到"+" "+book1.num);
+			console.log("book1.isChinese静态共有属性访问不到"+' '+book1.isChinese+" 自身Book.isChinese"+" "+Book.isChinese)
+			console.log("book1.time"+" "+book1.time)
+			console.log("book1.isJsbook"+' '+book1.isJsBook)
+			console.log("Book.resetTime"+' '+Book.resetTime())
+//			//new
+		</script>
+	</body>
+
+</html>

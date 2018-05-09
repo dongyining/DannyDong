@@ -1,0 +1,56 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome",
+            "url": "http://localhost:8088/index1.html",
+            "webRoot": "${workspaceRoot}"
+        },
+{
+    "type": "extensionHost",
+    "request": "launch",
+    "name": "启动扩展",
+    "runtimeExecutable": "${execPath}",
+    "args": [
+        "--extensionDevelopmentPath=${workspaceRoot}"
+    ],
+    "sourceMaps": true,
+    "outFiles": [
+        "${workspaceRoot}/out/**/*.js"
+    ],
+    "preLaunchTask": "npm"
+},
+        {
+            "type": "android",
+            "request": "launch",
+            "name": "Launch App",
+            "appSrcRoot": "${workspaceRoot}/app/src/main",
+            "apkFile": "${workspaceRoot}/app/build/outputs/apk/app-debug.apk",
+            "adbPort": 62001
+        },
+        {
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "name": "Launch localhost",
+            "url": "http://localhost:8080/inherit1.html",
+            "webRoot": "${workspaceRoot}"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:8080/inherit1.html",
+            "webRoot": "${workspaceRoot}"
+        },
+        {
+            "type": "chrome",
+            "request": "attach",
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "webRoot": "${workspaceRoot}"
+        }
+    ]
+}

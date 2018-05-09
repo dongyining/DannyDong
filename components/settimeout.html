@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script src="jquery-2.1.1.min.js"></script>
+		<script type="text/javascript">
+			
+			var aaa=111
+		function bbb(aaa){			
+			this.aaa=aaa
+			console.log(aaa)
+			var ddd=aaa
+			var ccc=222
+			console.log(ddd)
+			console.log(ccc)
+		}
+		bbb(aaa)
+			window.setTimeout(bbb,1000);
+		
+		$.post("..tigation/exportPolicyPDFPrintBySelect", params, function(result) {
+			var json=eval(result);
+			
+			$.each(json, function(index, value) {
+			    
+			 
+				alert(index);
+				
+	            //循环获取数据    
+	            $('#tbrmc').html(json[index].tbrmc);
+	            $('#tbrlxr').html(json[index].tbrlxr);
+	            $('#tbrdz').html(json[index].tbrdz);
+	            $('#tbrlxdh').html(json[index].tbrlxdh);
+	            $('#bbxrmc').html(json[index].bbxrmc);
+	            $('#bbxrlxr').html(json[index].bbxrlxr);
+	            $('#bbxrdz').html(json[index].bbxrdz);
+	            $('#bbxrlxdh').html(json[index].bbxrlxdh);
+	            $('#bbxrzjhm').html(json[index].bbxrzjhm);
+	            $('#bbxrhylx').html(json[index].bbxrhylx);
+	            $('#bbxrjyfw').html(json[index].bbxrjyfw);
+	            $('#bbxrhymc').html(json[index].bbxrhymc);
+	           
+	            $('#bqccmc').html(json[index].bqccmc);
+	            $('#bqccdz').html(json[index].bqccdz);
+	            $('#ccbqbsqrmc').html(json[index].ccbqbsqrmc);
+	            $('#fyslajtzsbh').html(json[index].fyslajtzsbh);  
+	            $('#bqcclx ').html(json[index].bqcclx );
+	           
+	            $('#dqbqccjz').html(json[index].dqbqccjz);
+	            $('#sqbqje').html(json[index].sqbqje);
+	            $('#fl').html(json[index].fl);  
+	            $('#bxf').html(json[index].bxf );
+	            
+//	            $('#mptj').html(json[index].mptj);
+//	            $('#bxjehj').html(json[index].bxjehj);
+//	            $('#bxfhj').html(json[index].bxfhj);  
+//	            $('#bxqjks').html(json[index].bxqjks );
+//	            $('#bxqjjs').html(json[index].bxqjjs );
+	            print(0); 
+	            var param={};
+//	             $.delay(5000);
+				$.post("..tigation/sleep", param, function(result) {
+					alert(666);
+				});
+			});
+				
+	});
+
+		</script>
+	</body>
+</html>

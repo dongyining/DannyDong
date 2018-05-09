@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<body>
+
+    <script type="text/javascript">
+        var fatherclass = function() {
+            this.fatherValue = true;
+            this.fatherValue1 = false
+            var bbb = "222"; //无法被继承
+            console.log(bbb)
+        }; //父
+
+        fatherclass.prototype.getfatherValue = function() {
+            return this.fatherValue;
+        }; //为父类添加共有方法
+
+        fatherclass.prototype.getfatherValue.father = function() {
+            return this.fatherValue1;
+        }
+
+
+
+
+        var sonclass = function sonclass() {
+            this.sonValue = false; //可以继承
+            var aaa = "1"; //无法被继承
+            console.log(aaa)
+            this.son = new fatherclass() //可以继承
+        }; //子
+        sonclass.prototype.getsonValue = new fatherclass(); //子原型里继承父类后子类原型将被覆盖
+        sonclass.prototype.getsonValue = function() {
+
+            return this.sonValue; //false
+
+
+        }; //为子类添加共有方法
+
+        // 原型有且只有一个					
+        var instance = new sonclass();
+        console.log(instance)
+            // console.log(instance instanceof fatherclass)
+            // console.log(instance instanceof sonclass)
+        console.log(instance.getfatherValue);
+        // console.log(instance.prototype.getfatherValue);
+        console.log(instance.getsonValue) //子类原型被覆盖;
+    </script>
+</body>
+
+</html>

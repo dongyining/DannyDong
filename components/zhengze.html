@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+
+	<body>
+		<script src="jquery-2.1.1.min.js"></script>
+		<script type="text/javascript">
+		  (function($) {
+			$.extend({
+				stripscript:function (s) {
+					var pattern = new RegExp("[null]")
+					var rs = "";
+					for(var i = 0; i < s.length; i++) {
+						if(s[i] == "n" && s[i + 1] == "u" && s[i + 2] == "l" && s[i + 3] == "l") {
+							rs = rs + s.split("null")
+							for(var j = 0; j < rs.length; j++) {
+								rs = rs.replace(",", "")
+							}					
+							return rs;
+						}
+
+					}
+
+				}	
+			 });
+		  })(jQuery)
+			
+
+			console.log($.stripscript("null奥nul术l大null/师多null"))
+			console.log( fn)
+			
+		</script>
+	</body>
+
+</html>
